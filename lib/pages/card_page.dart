@@ -77,11 +77,17 @@ class _CardPageState extends State<CardPage> {
           children: [
             const Text('Raspe!', style: TextStyle(color: Colors.white, fontSize: 32)),
 
-            const SizedBox(height: 50),
+            const SizedBox(height: 40),
 
             if (isLoading)
-              const CircularProgressIndicator(
-                color: Colors.white,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: size.width * 0.8,
+                  maxHeight: size.height * 0.4
+                ),
+                child: const CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               )
             else
               AnimatedSwitcher(
