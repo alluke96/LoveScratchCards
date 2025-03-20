@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:math'; // Import for Random number generation
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scratcher/scratcher.dart'; // Import the scratcher package
 
 class CardPage extends StatefulWidget {
   final String type;
@@ -14,9 +14,12 @@ class CardPage extends StatefulWidget {
 }
 
 class _CardPageState extends State<CardPage> {
+  final GlobalKey<ScratcherState> _scratcherKey = GlobalKey<ScratcherState>();
   List<String> messages = [];
   String randomMessage = '';
   bool isLoading = true;
+  bool thresholdReached = false; // To track if the scratch threshold is reached
+  double progress = 0; // To track scratch progress
 
   Future<List<String>> getJsonData(String type) async {
     String jsonString = await rootBundle.loadString('cards.json');
@@ -49,6 +52,8 @@ class _CardPageState extends State<CardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: const Color(0xFF5B4FB1),
       appBar: AppBar(
@@ -72,27 +77,83 @@ class _CardPageState extends State<CardPage> {
             if (isLoading)
               const CircularProgressIndicator()
             else
-              Card(
-                elevation: 5,
-                margin: const EdgeInsets.all(20),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    randomMessage,
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Scratcher(
+                  key: _scratcherKey,
+                  brushSize: 40, // Size of the scratch brush
+                  threshold: 50, // Percentage of area to scratch to reveal the message
+                  image: Image.asset(
+                    'images/background.jpg', // Background image for the scratcher
+                    fit: BoxFit.cover,
+                  ),
+                  onThreshold: () {
+                    setState(() {
+                      thresholdReached = true; // Called when the threshold is reached
+                    });
+                  },
+                  onChange: (value) {
+                    setState(() {
+                      progress = value; // Track scratch progress
+                    });
+                  },
+                  // onScratchStart: () {
+                  //   print("Scratching has started");
+                  // },
+                  // onScratchUpdate: () {
+                  //   print("Scratching in progress");
+                  // },
+                  // onScratchEnd: () {
+                  //   print("Scratching has finished");
+                  // },
+                  child: Container(
+                    width: size.width * 0.8,
+                    height: size.height * 0.4,
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        randomMessage,
+                        style: const TextStyle(
+                          fontSize: 26,
+                          color: Colors.white, // Text color
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                 ),
               ),
 
-            // const SizedBox(height: 20),
+            const SizedBox(height: 40),
 
-            // ElevatedButton(
-            //   onPressed: () {
-            //     pickRandomMessage();
-            //   },
-            //   child: const Text('Nova Carta'),
-            // ),
+            SizedBox(
+              height: 70,
+              child: Visibility(
+                visible: thresholdReached,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      thresholdReached = false;
+                      progress = 0;
+                      _scratcherKey.currentState?.reset();
+                      pickRandomMessage();
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+                  ),
+                  child: const Text(
+                    'Nova carta',
+                    style: TextStyle(
+                      color: Color(0xFF5B4FB1),
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
