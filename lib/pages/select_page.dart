@@ -33,9 +33,9 @@ class SelectPage extends StatelessWidget {
                 fontSize: 22,
               ),
             ),
-
+        
             const SizedBox(height: 80),
-
+        
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
@@ -62,9 +62,9 @@ class SelectPage extends StatelessWidget {
                 ),
               ),
             ),
-
+        
             const SizedBox(height: 40),
-
+        
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(

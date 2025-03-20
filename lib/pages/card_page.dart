@@ -23,7 +23,7 @@ class _CardPageState extends State<CardPage> {
   int _clipKey = 0; // Key for AnimatedSwitcher transition
 
   Future<List<String>> getJsonData(String type) async {
-    String jsonString = await rootBundle.loadString('cards.json');
+    String jsonString = await rootBundle.loadString('assets/cards.json');
     Map<String, dynamic> jsonData = jsonDecode(jsonString);
     List<String> cards = List<String>.from(jsonData[type]);
     return cards;
@@ -75,8 +75,14 @@ class _CardPageState extends State<CardPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text('Raspe!', style: TextStyle(color: Colors.white, fontSize: 32)),
+
+            const SizedBox(height: 50),
+
             if (isLoading)
-              const CircularProgressIndicator()
+              const CircularProgressIndicator(
+                color: Colors.white,
+              )
             else
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 500), // Transition duration
@@ -88,7 +94,7 @@ class _CardPageState extends State<CardPage> {
                     brushSize: 40, // Size of the scratch brush
                     threshold: 50, // Percentage of area to scratch to reveal the message
                     image: Image.asset(
-                      'images/background.jpg', // Background image for the scratcher
+                      'assets/images/background.jpg', // Background image for the scratcher
                       fit: BoxFit.cover,
                     ),
                     onThreshold: () {
@@ -129,9 +135,9 @@ class _CardPageState extends State<CardPage> {
                   ),
                 ),
               ),
-
+        
             const SizedBox(height: 40),
-
+        
             SizedBox(
               height: 70,
               child: Visibility(
@@ -148,7 +154,7 @@ class _CardPageState extends State<CardPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   ),
                   child: const Text(
                     'Nova carta',
