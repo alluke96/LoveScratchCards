@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:love_scratch_cards/pages/card_page.dart';
 
 class SelectPage extends StatelessWidget {
   const SelectPage({super.key});
@@ -37,7 +38,17 @@ class SelectPage extends StatelessWidget {
 
             ElevatedButton(
               onPressed: () {
-                // Navigate to the "Amor" card page or perform an action
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) => const CardPage(type: 'love'),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -56,7 +67,17 @@ class SelectPage extends StatelessWidget {
 
             ElevatedButton(
               onPressed: () {
-                // Navigate to the "Motivação" card page or perform an action
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) => const CardPage(type: 'motivational'),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
