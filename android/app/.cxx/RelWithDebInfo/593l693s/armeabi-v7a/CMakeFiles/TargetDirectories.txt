@@ -1,0 +1,2 @@
+C:/Users/allys/Documents/Projetos/love_scratch_cards/android/app/.cxx/RelWithDebInfo/593l693s/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/allys/Documents/Projetos/love_scratch_cards/android/app/.cxx/RelWithDebInfo/593l693s/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,4 +1,4 @@
-package com.example.love_scratch_cards
+package com.dunke.love_scratch_cards
 
 import io.flutter.embedding.android.FlutterActivity
 
