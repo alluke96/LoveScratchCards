@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:math'; // Import for Random number generation
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scratcher/scratcher.dart'; // Import the scratcher package
+import 'package:scratcher/scratcher.dart';
 
 class CardPage extends StatefulWidget {
   final String type;
@@ -20,6 +20,7 @@ class _CardPageState extends State<CardPage> {
   bool isLoading = true;
   bool thresholdReached = false; // To track if the scratch threshold is reached
   double progress = 0; // To track scratch progress
+  int _clipKey = 0; // Key for AnimatedSwitcher transition
 
   Future<List<String>> getJsonData(String type) async {
     String jsonString = await rootBundle.loadString('cards.json');
@@ -77,48 +78,52 @@ class _CardPageState extends State<CardPage> {
             if (isLoading)
               const CircularProgressIndicator()
             else
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: Scratcher(
-                  key: _scratcherKey,
-                  brushSize: 40, // Size of the scratch brush
-                  threshold: 50, // Percentage of area to scratch to reveal the message
-                  image: Image.asset(
-                    'images/background.jpg', // Background image for the scratcher
-                    fit: BoxFit.cover,
-                  ),
-                  onThreshold: () {
-                    setState(() {
-                      thresholdReached = true; // Called when the threshold is reached
-                    });
-                  },
-                  onChange: (value) {
-                    setState(() {
-                      progress = value; // Track scratch progress
-                    });
-                  },
-                  // onScratchStart: () {
-                  //   print("Scratching has started");
-                  // },
-                  // onScratchUpdate: () {
-                  //   print("Scratching in progress");
-                  // },
-                  // onScratchEnd: () {
-                  //   print("Scratching has finished");
-                  // },
-                  child: Container(
-                    width: size.width * 0.8,
-                    height: size.height * 0.4,
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        randomMessage,
-                        style: const TextStyle(
-                          fontSize: 26,
-                          color: Colors.white, // Text color
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500), // Transition duration
+                child: ClipRRect(
+                  key: ValueKey<int>(_clipKey), // Unique key for transition
+                  borderRadius: BorderRadius.circular(18),
+                  child: Scratcher(
+                    key: _scratcherKey,
+                    brushSize: 40, // Size of the scratch brush
+                    threshold: 50, // Percentage of area to scratch to reveal the message
+                    image: Image.asset(
+                      'images/background.jpg', // Background image for the scratcher
+                      fit: BoxFit.cover,
+                    ),
+                    onThreshold: () {
+                      setState(() {
+                        thresholdReached = true; // Called when the threshold is reached
+                      });
+                    },
+                    onChange: (value) {
+                      setState(() {
+                        progress = value; // Track scratch progress
+                      });
+                    },
+                    // onScratchStart: () {
+                    //   print("Scratching has started");
+                    // },
+                    // onScratchUpdate: () {
+                    //   print("Scratching in progress");
+                    // },
+                    // onScratchEnd: () {
+                    //   print("Scratching has finished");
+                    // },
+                    child: Container(
+                      width: size.width * 0.8,
+                      height: size.height * 0.4,
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          randomMessage,
+                          style: const TextStyle(
+                            fontSize: 26,
+                            color: Colors.white, // Text color
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -138,6 +143,7 @@ class _CardPageState extends State<CardPage> {
                       progress = 0;
                       _scratcherKey.currentState?.reset();
                       pickRandomMessage();
+                      _clipKey++; // Change the key to trigger the transition
                     });
                   },
                   style: ElevatedButton.styleFrom(
