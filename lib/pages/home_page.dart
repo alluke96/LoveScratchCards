@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:love_scratch_cards/pages/card_page.dart';
+import 'package:love_scratch_cards/pages/select_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => const CardPage(),
+                    pageBuilder: (context, animation, secondaryAnimation) => const SelectPage(),
                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
                       return FadeTransition(
                         opacity: animation,
